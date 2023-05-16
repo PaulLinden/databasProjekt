@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.example.database.InitDatabase.GetConnection;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class UserRepository {
 
     public UserRepository() {
@@ -57,7 +58,7 @@ public class UserRepository {
         return userName;
     }
 
-    public List<HashMap<String, Object>> getUsersNameAndId() throws SQLException {
+    public List<HashMap<String, Object>> getUsersNameAndId() {
         List<HashMap<String, Object>> userList = new ArrayList<>();
 
         try (Connection connection = GetConnection();
@@ -103,10 +104,10 @@ public class UserRepository {
         boolean exists = false;
 
         try (Connection connection = GetConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, user.getId());
 
-            try (ResultSet result = preparedStatement.executeQuery();) {
+            try (ResultSet result = preparedStatement.executeQuery()) {
                 exists = result.next();
             }
         } catch (SQLException e) {
@@ -156,6 +157,22 @@ public class UserRepository {
         } catch (SQLException e) {
             System.out.println(e);
         }
+    }
+
+    public int countUsers() {
+        int userCount = 0;
+
+        String query = "SELECT COUNT(id) FROM users;";
+        try( Connection connection = GetConnection();
+             Statement statement = connection.createStatement();
+             ResultSet result = statement.executeQuery(query)) {
+            while (result.next()) {
+                userCount = result.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return userCount;
     }
 }
 

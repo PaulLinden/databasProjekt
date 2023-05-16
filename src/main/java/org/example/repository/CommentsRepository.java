@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import static org.example.database.InitDatabase.GetConnection;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class CommentsRepository {
 
     public void getAllComments(ArrayList<Integer> ids, ArrayList<Integer> postIds, ArrayList<String> comments ){
@@ -28,7 +29,7 @@ public class CommentsRepository {
             System.out.println(e);
         }
     }
-    public void createComment(User user, Posts post, String text) throws SQLException {
+    public void createComment(User user, Posts post, String text) {
         String query = "INSERT INTO comments ( user_id, post_id, content) VALUES ( ?, ?, ?);";
 
         try (Connection connection = GetConnection();

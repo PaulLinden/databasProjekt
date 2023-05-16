@@ -4,6 +4,7 @@ import com.mysql.cj.jdbc.MysqlDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class InitDatabase {
 
     static MysqlDataSource dataSource;

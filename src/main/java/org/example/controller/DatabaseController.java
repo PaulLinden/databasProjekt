@@ -5,7 +5,6 @@ import org.example.repository.DatabaseRepository;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class DatabaseController {
 
@@ -42,7 +41,7 @@ public class DatabaseController {
         databaseRepository.updateRecord(newData);
     }
 
-    public void createTable(String tableName, String columnDefinitionsInput) throws SQLException {
+    public void createTable(String tableName, String columnDefinitionsInput) {
 
         AllData newTable = new AllData();
 

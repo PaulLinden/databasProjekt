@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import static org.example.database.InitDatabase.GetConnection;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class DatabaseRepository {
     public void createTable(AllData newTableData) {
 
@@ -27,7 +28,7 @@ public class DatabaseRepository {
         String query = queryBuilder.toString();
 
         try(Connection connection = GetConnection();
-            Statement statement = connection.createStatement();) {
+            Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(query);
             System.out.println("Table created");
@@ -44,7 +45,7 @@ public class DatabaseRepository {
         data = new HashMap<>();
         try (Connection connection = GetConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql);) {
+             ResultSet resultSet = statement.executeQuery(sql)) {
 
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -66,7 +67,7 @@ public class DatabaseRepository {
         return data;
     }
 
-    public void updateRecord(AllData newData) throws SQLException {
+    public void updateRecord(AllData newData) {
 
         String tableName = newData.getTableName();
         int id = newData.getId();
@@ -76,7 +77,7 @@ public class DatabaseRepository {
         String sqlUp = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
 
         try (Connection connection = GetConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sqlUp);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlUp)) {
             preparedStatement.setString(1, value);
             preparedStatement.setInt(2, id);
             preparedStatement.executeUpdate();

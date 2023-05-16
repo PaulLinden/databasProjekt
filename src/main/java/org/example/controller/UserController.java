@@ -35,11 +35,15 @@ public class UserController {
         userRepository.getSpecificUser(user);
     }
 
+    public void countUsers() {
+       int numberOfUser = userRepository.countUsers();
+        System.out.println("Number of users:"+numberOfUser);
+    }
     public void getUsersNameAndIdList() throws SQLException {
         List<HashMap<String, Object>> list = userRepository.getUsersNameAndId();
 
         for (HashMap<String, Object> user : list) {
-            
+
             for (String key : user.keySet()) {
                 System.out.println(key + ": " + user.get(key));
             }

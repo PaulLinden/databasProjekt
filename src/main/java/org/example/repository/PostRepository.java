@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import static org.example.database.InitDatabase.GetConnection;
 
+@SuppressWarnings("ALL")
 public class PostRepository {
     public boolean postExists(Posts post) throws SQLException {
         String query = "SELECT id FROM posts";

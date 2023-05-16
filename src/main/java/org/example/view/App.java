@@ -97,6 +97,7 @@ public class App {
         System.out.println("6.Check user offline");
         System.out.println("7.Remove user");
         System.out.println("8.Get list of users and ids");
+        System.out.println("9.Get number of users");
 
         String menuOptionInput = scanner.nextLine();
         switch (menuOptionInput) {
@@ -138,6 +139,7 @@ public class App {
                 }
             }
             case"8" ->userController.getUsersNameAndIdList();
+            case"9" ->userController.countUsers();
         }
     }
     private static void postsMenu() throws SQLException {

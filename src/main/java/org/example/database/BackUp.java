@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import static org.example.database.InitDatabase.GetConnection;
 
+@SuppressWarnings("ThrowablePrintedToSystemOut")
 public class BackUp {
     public static void createDatabase(){
         String [] tables = {"users","posts","comments"};
@@ -31,7 +32,7 @@ public class BackUp {
             String query = queryBuilder.toString();
 
             try (Connection connection = GetConnection();
-                 Statement statement = connection.createStatement();) {
+                 Statement statement = connection.createStatement()) {
 
                 statement.executeUpdate(query);
             } catch (SQLException e) {
