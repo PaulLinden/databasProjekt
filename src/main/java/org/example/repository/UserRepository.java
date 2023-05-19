@@ -14,7 +14,6 @@ public class UserRepository {
 
     public UserRepository() {
     }
-
     public List<HashMap<String, Object>> getAllUserData() throws SQLException {
         List<HashMap<String, Object>> userList = new ArrayList<>();
 
@@ -41,8 +40,6 @@ public class UserRepository {
         }
         return userList;
     }
-
-
     public String getSpecificUser(User user) {
         String userName = null;
         try (Connection connection = GetConnection();
@@ -57,7 +54,6 @@ public class UserRepository {
         }
         return userName;
     }
-
     public List<HashMap<String, Object>> getUsersNameAndId() {
         List<HashMap<String, Object>> userList = new ArrayList<>();
 
@@ -84,8 +80,6 @@ public class UserRepository {
         }
         return userList;
     }
-
-
     public void createUserRow(User user) throws SQLException {
         String query = "INSERT INTO users (name, email) VALUES (?, ?)";
 
@@ -98,7 +92,6 @@ public class UserRepository {
             System.out.println(e);
         }
     }
-
     public boolean userExists(User user) throws SQLException {
         String query = "SELECT id FROM users WHERE id = ?";
         boolean exists = false;
@@ -115,7 +108,6 @@ public class UserRepository {
         }
         return exists;
     }
-
     public void getUsersOnline() {
         try (Connection connection = GetConnection();
              Statement statement = connection.createStatement();
@@ -131,7 +123,6 @@ public class UserRepository {
             System.out.println(e);
         }
     }
-
     public void getUsersOffline() {
         try (Connection connection = GetConnection();
              Statement statement = connection.createStatement();
@@ -154,6 +145,24 @@ public class UserRepository {
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(query);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        String postQuery = "DELETE FROM posts WHERE user_id = '" + user.getId() + "'";
+        try (Connection connection = GetConnection();
+             Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(postQuery);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        String commentsQuery = "DELETE FROM comments WHERE user_id = '" + user.getId() + "'";
+        try (Connection connection = GetConnection();
+             Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(commentsQuery);
         } catch (SQLException e) {
             System.out.println(e);
         }

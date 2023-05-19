@@ -79,4 +79,24 @@ public class PostRepository {
 
         return content;
     }
+
+    public void deletePost(Posts post){
+        String postQuery = "DELETE FROM posts WHERE user_id = '" + post.getPostId() + "'";
+        try (Connection connection = GetConnection();
+             Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(postQuery);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        String commentsQuery = "DELETE FROM comments WHERE user_id = '" + post.getPostId() + "'";
+        try (Connection connection = GetConnection();
+             Statement statement = connection.createStatement()) {
+
+            statement.executeUpdate(commentsQuery);
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

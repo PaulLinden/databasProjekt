@@ -66,4 +66,10 @@ public class PostsController {
         }
 
     }
+
+    public void deletePost(int postId){
+        Posts post = new Posts();
+        post.setPostId(postId);
+        postRepository.deletePost(post);
+    }
 }
