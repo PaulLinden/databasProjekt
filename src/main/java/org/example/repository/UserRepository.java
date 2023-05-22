@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.example.database.InitDatabase.GetConnection;
+import static org.example.database.InitDatabase.getInstance;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
 public class UserRepository {
@@ -17,7 +17,7 @@ public class UserRepository {
     public List<HashMap<String, Object>> getAllUserData() throws SQLException {
         List<HashMap<String, Object>> userList = new ArrayList<>();
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM users")) {
 
@@ -42,7 +42,7 @@ public class UserRepository {
     }
     public String getSpecificUser(User user) {
         String userName = null;
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT name FROM users WHERE id =" + user.getId())) {
 
@@ -57,7 +57,7 @@ public class UserRepository {
     public List<HashMap<String, Object>> getUsersNameAndId() {
         List<HashMap<String, Object>> userList = new ArrayList<>();
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT id, name FROM users")) {
 
@@ -83,7 +83,7 @@ public class UserRepository {
     public void createUserRow(User user) throws SQLException {
         String query = "INSERT INTO users (name, email) VALUES (?, ?)";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
@@ -96,7 +96,7 @@ public class UserRepository {
         String query = "SELECT id FROM users WHERE id = ?";
         boolean exists = false;
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, user.getId());
 
@@ -109,7 +109,7 @@ public class UserRepository {
         return exists;
     }
     public void getUsersOnline() {
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT name,email FROM users WHERE online=1")) {
 
@@ -124,7 +124,7 @@ public class UserRepository {
         }
     }
     public void getUsersOffline() {
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT name,email FROM users WHERE online=0")) {
 
@@ -141,7 +141,7 @@ public class UserRepository {
 
     public void removeUserById(User user) {
         String query = "DELETE FROM users WHERE id = '" + user.getId() + "'";
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(query);
@@ -150,7 +150,7 @@ public class UserRepository {
         }
 
         String postQuery = "DELETE FROM posts WHERE user_id = '" + user.getId() + "'";
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(postQuery);
@@ -159,7 +159,7 @@ public class UserRepository {
         }
 
         String commentsQuery = "DELETE FROM comments WHERE user_id = '" + user.getId() + "'";
-        try (Connection connection = GetConnection();
+        try (Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(commentsQuery);
@@ -172,7 +172,7 @@ public class UserRepository {
         int userCount = 0;
 
         String query = "SELECT COUNT(id) FROM users;";
-        try( Connection connection = GetConnection();
+        try( Connection connection = getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query)) {
             while (result.next()) {

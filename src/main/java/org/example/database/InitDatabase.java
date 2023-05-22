@@ -1,4 +1,5 @@
 package org.example.database;
+
 import com.mysql.cj.jdbc.MysqlDataSource;
 
 import java.sql.Connection;
@@ -7,13 +8,27 @@ import java.sql.SQLException;
 @SuppressWarnings("ThrowablePrintedToSystemOut")
 public class InitDatabase {
 
-    static MysqlDataSource dataSource;
-    static String url = "localhost";
-    static int port = 3306;
-    static String database = "myData";
-    static String username = "root";
-    static String password = "";
-    public static void InitializeDatabase(){
+    private static InitDatabase instance;
+    private MysqlDataSource dataSource;
+    private String url = "localhost";
+    private int port = 3306;
+    private String database = "myData";
+    private String username = "root";
+    private String password = "";
+
+    private InitDatabase() {
+        // private constructor
+    }
+
+    public static synchronized InitDatabase getInstance() {
+        if (instance == null) {
+            instance = new InitDatabase();
+            instance.initializeDatabase();
+        }
+        return instance;
+    }
+
+    private void initializeDatabase() {
         try {
             System.out.print("Configuring data source...");
             dataSource = new MysqlDataSource();
@@ -22,26 +37,22 @@ public class InitDatabase {
             dataSource.setUrl("jdbc:mysql://" + url + ":" + port + "/" + database + "?serverTimezone=UTC");
             dataSource.setUseSSL(false);
             System.out.print("done!\n");
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.print("failed!\n");
             System.out.println(e);
             System.exit(0);
         }
     }
 
-    public static Connection GetConnection(){
-        try{
-            //System.out.print("Fetching connection to database...");
-            //System.out.print("done!\n");
+    public Connection getConnection() {
+        try {
             return dataSource.getConnection();
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             System.out.print("failed!\n");
             System.out.println(e);
             System.exit(0);
             return null;
         }
     }
-
 }
+

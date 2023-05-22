@@ -1,19 +1,18 @@
 package org.example.repository;
 
+import org.example.database.InitDatabase;
 import org.example.model.Posts;
 import org.example.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-import static org.example.database.InitDatabase.GetConnection;
-
 @SuppressWarnings("ALL")
 public class PostRepository {
     public boolean postExists(Posts post) throws SQLException {
         String query = "SELECT id FROM posts";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query)) {
 
@@ -36,7 +35,7 @@ public class PostRepository {
 
         String query = "INSERT INTO posts ( user_id, content) VALUES ( ?, ?);";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, user.getId());
@@ -50,7 +49,7 @@ public class PostRepository {
 
     public void getAllPosts(ArrayList<Integer> ids, ArrayList<String> posts) {
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT user_id,content FROM posts ORDER BY created DESC")) {
 
@@ -66,7 +65,7 @@ public class PostRepository {
     }
     public String getSpecificPost(Posts post){
         String content = null;
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT content FROM posts WHERE id ="+post.getPostId())) {
 
@@ -82,7 +81,7 @@ public class PostRepository {
 
     public void deletePost(Posts post){
         String postQuery = "DELETE FROM posts WHERE user_id = '" + post.getPostId() + "'";
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(postQuery);
@@ -91,7 +90,7 @@ public class PostRepository {
         }
 
         String commentsQuery = "DELETE FROM comments WHERE user_id = '" + post.getPostId() + "'";
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(commentsQuery);

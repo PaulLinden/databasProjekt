@@ -4,6 +4,7 @@ import org.example.model.AllData;
 import org.example.repository.DatabaseRepository;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DatabaseController {
@@ -20,11 +21,12 @@ public class DatabaseController {
         alldata.setTableName(tableName);
 
         try {
-            HashMap<String,Object> allData = databaseRepository.getAllData(alldata.getTableName());
+            ArrayList<Object> allData = databaseRepository.getAllData(alldata.getTableName());
 
-            for (String data : allData.keySet()) {
-                System.out.println(data + ": " + allData.get(data));
+            for (Object data : allData) {
+                System.out.println(data);
             }
+
             System.out.println("------------------------");
         } catch (SQLException e) {
             e.printStackTrace();

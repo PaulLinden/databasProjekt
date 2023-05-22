@@ -1,12 +1,12 @@
 package org.example.repository;
 
+import org.example.database.InitDatabase;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*;
-
-import static org.example.database.InitDatabase.GetConnection;
 
 public class ExtendedSearchRepository {
 
@@ -21,7 +21,7 @@ public class ExtendedSearchRepository {
         Map<Integer, String> postUsers = new HashMap<>();
         Map<Integer, String> postContents = new HashMap<>();
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet result = statement.executeQuery(query)) {
 
@@ -68,7 +68,7 @@ public class ExtendedSearchRepository {
         /*SELECT users.name, posts.content
         FROM users
         INNER JOIN posts ON users.id = posts.user_id;*/
-        try(Connection connection = GetConnection();
+        try(Connection connection = InitDatabase.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query)){
 
@@ -88,7 +88,7 @@ public class ExtendedSearchRepository {
                        "FROM users, posts " +
                        "WHERE posts.user_id = users.id AND posts.created > '2023-05-17 14:00:00'";
 
-        try(Connection connection = GetConnection();
+        try(Connection connection = InitDatabase.getInstance().getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query)){
 
@@ -108,7 +108,7 @@ public class ExtendedSearchRepository {
                        "SET password = 'nyttLosen' " +
                        "WHERE id = (SELECT id WHERE id = 10);";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement()) {
             int rowsAffected = statement.executeUpdate(query);
 
@@ -138,7 +138,7 @@ public class ExtendedSearchRepository {
                 "SET visable = '"+trueOrFalse+"' " +
                 "WHERE user_id = (SELECT id FROM users WHERE id = 5);";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement()) {
             int rowsAffected = statement.executeUpdate(query);
 

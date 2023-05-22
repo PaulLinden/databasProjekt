@@ -1,11 +1,11 @@
 package org.example.repository;
 
+import org.example.database.InitDatabase;
 import org.example.model.AllData;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import static org.example.database.InitDatabase.GetConnection;
 
 @SuppressWarnings("ThrowablePrintedToSystemOut")
 public class DatabaseRepository {
@@ -27,7 +27,7 @@ public class DatabaseRepository {
         queryBuilder.append(");");
         String query = queryBuilder.toString();
 
-        try(Connection connection = GetConnection();
+        try(Connection connection = InitDatabase.getInstance().getConnection();
             Statement statement = connection.createStatement()) {
 
             statement.executeUpdate(query);
@@ -38,12 +38,11 @@ public class DatabaseRepository {
         }
     }
 
-    public HashMap<String, Object> getAllData(String tableName) throws SQLException {
+    public ArrayList<Object> getAllData(String tableName) throws SQLException {
         String sql = "SELECT * FROM " + tableName;
 
-        HashMap<String, Object> data;
-        data = new HashMap<>();
-        try (Connection connection = GetConnection();
+        ArrayList<Object> allData = new ArrayList<>();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
 
@@ -52,19 +51,22 @@ public class DatabaseRepository {
 
 
             while (resultSet.next()) {
+                HashMap<String, Object> data = new HashMap<>();
+
                 for (int i = 1; i <= columnCount; i++) {
                     String columnName = metaData.getColumnName(i);
                     Object columnValue = resultSet.getObject(i);
 
                     data.put(columnName, columnValue);
                 }
+                allData.add(data);
             }
         }
         catch(SQLException e){
             System.out.println(e);
         }
 
-        return data;
+        return allData;
     }
 
     public void updateRecord(AllData newData) {
@@ -76,7 +78,7 @@ public class DatabaseRepository {
 
         String sqlUp = "UPDATE " + tableName + " SET " + columnName + " = ? WHERE id = ?";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlUp)) {
             preparedStatement.setString(1, value);
             preparedStatement.setInt(2, id);

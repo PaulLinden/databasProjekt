@@ -1,19 +1,18 @@
 package org.example.repository;
 
+import org.example.database.InitDatabase;
 import org.example.model.Posts;
 import org.example.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-import static org.example.database.InitDatabase.GetConnection;
-
 @SuppressWarnings("ThrowablePrintedToSystemOut")
 public class CommentsRepository {
 
     public void getAllComments(ArrayList<Integer> ids, ArrayList<Integer> postIds, ArrayList<String> comments ){
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT * FROM comments ORDER BY created DESC")) {
 
@@ -32,7 +31,7 @@ public class CommentsRepository {
     public void createComment(User user, Posts post, String text) {
         String query = "INSERT INTO comments ( user_id, post_id, content) VALUES ( ?, ?, ?);";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             preparedStatement.setInt(1, user.getId());

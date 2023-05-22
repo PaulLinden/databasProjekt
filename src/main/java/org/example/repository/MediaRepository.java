@@ -1,11 +1,10 @@
 package org.example.repository;
 
+import org.example.database.InitDatabase;
 import org.example.model.Media;
 import org.example.model.Posts;
 
 import java.sql.*;
-
-import static org.example.database.InitDatabase.GetConnection;
 
 public class MediaRepository {
 
@@ -14,7 +13,7 @@ public class MediaRepository {
         String updatePostQuery = "UPDATE posts SET media_id = ? WHERE id = ?";
         String gallerySql = "INSERT INTO gallery (file_id, gallery_name) SELECT ?, name FROM users WHERE id = (SELECT user_id FROM posts WHERE id = ?)";
 
-        try (Connection connection = GetConnection();
+        try (Connection connection = InitDatabase.getInstance().getConnection();
              PreparedStatement mediaStatement = connection.prepareStatement(mediaQuery, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement updateStatement = connection.prepareStatement(updatePostQuery);
              PreparedStatement galleryStatement = connection.prepareStatement(gallerySql)) {
@@ -32,7 +31,6 @@ public class MediaRepository {
 
             if (generatedKeys.next()) {
                 mediaId = generatedKeys.getInt(1);
-                System.out.println(mediaId);
             }
 
             // add media_id to post
@@ -52,13 +50,5 @@ public class MediaRepository {
         } catch (SQLException e) {
             System.out.println(e);
         }
-    }
-
-
-
-
-
-    public void addImageToGallery(){
-
     }
 }
